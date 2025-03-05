@@ -21,7 +21,7 @@ async def on_ready():
     print(f'Logged in as {bot.user}')
 
 @bot.command(name="chat")
-async def chat(ctx, *, message: str):
+async def chat(self,ctx, *, message: str):
     try:
         response = model.generate_content(message)
         await ctx.send(response.text)
@@ -30,13 +30,11 @@ async def chat(ctx, *, message: str):
 @bot.command(name="remind")
 async def remind(ctx, time: str, *, task: str):
     try:
-        # Parse time (e.g., 10m, 1h, 2d)
+
         if time.endswith('m'):
             delay = int(time[:-1]) * 60
         elif time.endswith('h'):
             delay = int(time[:-1]) * 3600
-        elif time.endswith('d'):
-            delay = int(time[:-1]) * 86400
         else:
             await ctx.send("Invalid time format. Use '10m', '1h', or '2d'.")
             return
@@ -65,7 +63,6 @@ async def play(ctx, url: str):
         return
 
     channel = ctx.author.voice.channel
-    voice_client = await channel.connect()
     ydl_opts = {'format': 'bestaudio'}
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
